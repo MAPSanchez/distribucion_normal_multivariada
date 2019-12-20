@@ -1,0 +1,133 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}Serie Fibonacci{% endblock %}
+
+{% block body %}
+
+<div class="page-header card">
+<div class="row align-items-end">
+    <div class="col-lg-8">
+        <div class="page-header-title">
+            <i class="fas fa-sort-numeric-down" style="min-width:50px; background-color:#259182"></i>
+            <div class="d-inline">
+                <h4 style="text-transform: none;">Serie Fibionacci</h4>
+                <span style="text-transform: none;">Obtener algun numero de la serie fibonacci.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}">
+                        <i class="icofont icofont-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Serie Fibionacci</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<div class="page-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Zero config.table start -->
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="sub-title">Indique la posición del numero de la serie Fibonacci que requiera obtener</h4>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-1 col-form-label" for="type">n = </label>
+                                    <div class="col-sm-8">
+                                        <input type="number" id="n" class="form-control" title="Posición del numero fibonacii" step="1" min="0" value="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" style="width:100%;" id="calculate_btn" class="btn btn-success"><i class="fas fa-check"></i>Calcular</button>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div id="results">
+                        <h4 class="sub-title">Resultados</h4>
+
+                        Fibionacci en la posicion <i>n</i><sub id="n_span"></sub> = <span style="font-weight:bold; font-size: 18px" id="result_number_span"></span>
+                        <br /><br />
+                        <div id="serie_results">
+                            <h4 class="sub-title">Serie Fibonacci hasta el numero encontrado</h4>
+                            <span id="fibonacci_serie_span"></span><span style="font-weight:bold; font-size: 18px" id="last_number_span"></span>
+
+                        </div>
+
+                    </div>
+
+                    <hr />
+                    <center>
+                        <a style="color:white;" onClick='history.go(-1)'' class="btn btn-primary btn-adjust-mobile"><i class="icofont icofont-arrow-left"></i>Regresar</a>
+
+                    </center>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loading_serie" class="modal-loading-pdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div style="padding-top:9%" class="loader-block">
+         <svg id="loader2" viewBox="0 0 100 100">
+         <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+         </svg>
+    </div>
+    <center>
+        <h4 id="myModalLabel_pdf" style="color:white;">Calculando numero de la serie fibonacci </h4>
+        <h5 style="color:white;">Por favor espere...</h5>
+    </center>
+</div>
+
+{% endblock %}
+
+{% block javascriptcode %}
+<script>
+    $("#results").hide();
+    $("#calculate_btn").click(function(){
+        if($("#n").val()>0){
+            var ajax_operation_timer = setTimeout(function() {
+                $("#loading_serie").show();
+            }, 800);
+
+            $.ajax({
+    			url: '{{ url_for("calculate_fibonacci") }}',
+    			method: 'post',
+                data: JSON.stringify({n: $("#n").val()}, null, '\t'),
+                contentType: 'application/json;charset=UTF-8',
+
+    			success: function(result) {
+                    clearTimeout(ajax_operation_timer);
+                    $('#loading_serie').hide();
+                    $("#results").show(200);
+                    $("#n_span").text($("#n").val());
+                    $("#result_number_span").text(result[0]);
+                    $("#fibonacci_serie_span").text(result[1]+", ");
+                    $("#last_number_span").text(result[0]+".");
+                    if($("#n").val()>=35){
+                        $("#serie_results").hide();
+                    }else{
+                        $("#serie_results").show();
+                    }
+    			}
+    		});
+        }else{
+            swal({
+                icon: 'error',
+                title: 'Numero no valido',
+                text: 'Ingrese un numero mayor a 0 para poder continuar.',
+            });
+        }
+
+    });
+
+</script>
+{% endblock %}

@@ -1,0 +1,415 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}Generar Dataset{% endblock %}
+
+{% block body %}
+<div class="page-header card">
+<div class="row align-items-end">
+    <div class="col-lg-8">
+        <div class="page-header-title">
+            <i class="fas fa-cube" style="min-width:50px; background-color:#DA4524"></i>
+            <div class="d-inline">
+                <h4 style="text-transform: none;">Generar Dataset</h4>
+                <span style="text-transform: none;">Introduzca los valores solicitados para generar dataset.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}">
+                        <i class="icofont icofont-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Generar Dataset</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<div class="page-body">
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Zero config.table start -->
+        <div class="card">
+
+
+            <div id="data_div" class="card-block">
+                <h4 class="sub-title">Introduzca la siguiente información</h4>
+
+                    <div class="form-group row">
+                        <div class="col-sm-1">
+                        </div>
+                        <label class="col-sm-2 col-form-label">Número de variables:</label>
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" name="N_variables" id="N_variables" value="2" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1">
+                        </div>
+                        <label class="col-sm-10 col-form-label"><strong>  Se generará aleatoriamente la desviación estandar de las variables</strong></label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1">
+                        </div>
+                        <label class="col-sm-2 col-form-label">Límite inferior:</label>
+                        <div class="col-sm-2">
+                            <input type="number" class="form-control" name="lim_inferior" id="lim_inferior" value="0" required>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Límite superior:</label>
+                        <div class="col-sm-2">
+                            <input type="number" class="form-control" name="lim_superior" id="lim_superior" value="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1">
+                        </div>
+                        <label class="col-sm-10 col-form-label"><strong> El dataset a generar poseerá k filas, favor de ingresar valor de k</strong></label>
+                    </div>
+                    <div class="form-group row">  
+                        <div class="col-sm-1">
+                        </div>  
+                        <label class="col-sm-2 col-form-label">Filas del Dataset:</label>
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" name="k" id="k" value="100" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" style="width:100%;" id="delete_data" class="btn btn-inverse"><i class="fas fa-trash-alt"></i>Borrar Datos</button>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" style="width:100%;" id="generate_dataset" class="btn btn-success"><i class="fas fa-table"></i>Generar Dataset</button>
+                        </div>
+
+                    </div>
+            </div>
+
+
+
+
+            
+            <div id="results_div" class="card-block">
+                <h4 class="sub-title">Datos Generados</h4>
+                <div class="form-group row">  
+                    <label class="col-sm-4 col-form-label"><strong>Número de Variables:</strong> </label>
+                    <div class="col-sm-8">
+                        <label id="numero_variables"></label>
+                    </div>
+                </div>
+                <div class="form-group row">  
+                    <label class="col-sm-4 col-form-label"><strong>Vector de Medias (&mu;):</strong> </label>
+                    <div class="col-sm-8">
+                        <label id="vector_medias"></label>
+                    </div>
+                </div>
+                <div class="form-group row">  
+                    <label class="col-sm-4 col-form-label"><strong>Vector de Desviación Estandar (&sigma;):</strong> </label>
+                    <div class="col-sm-8">
+                        <label id="vector_desviacion_estandar"></label>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">  
+                    <div class="col-sm-5 dt-responsive table-responsive">
+                        <h4 class="sub-title">Dataset generado</h4>
+                        <table class="table table-striped table-bordered" id="dataset_datatable" style="width: 100%;">
+                        </table>
+                    </div>
+                    <div class="col-sm-7 dt-responsive table-responsive">     
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="sub-title">Gráfica Datos</h4>                                
+                                <div id="grafica_datos" class="plotly-graph-div"></div>
+                            </div>
+                        </div>     
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="sub-title">Matriz Covarianza Generada</h4>                                
+                                <table class="table table-striped table-bordered" id="covarianza_datatable" style="width: 100%;">
+                                </table>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<div id="loading_serie" class="modal-loading-pdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div style="padding-top:9%" class="loader-block">
+         <svg id="loader2" viewBox="0 0 100 100">
+         <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+         </svg>
+    </div>
+    <center>
+        <h4 id="myModalLabel_pdfupdateHeuristicsDiv" style="color:white;">Generando Dataset </h4>
+        <h5 style="color:white;">Por favor espere...</h5>
+    </center>
+</div>
+{% endblock %}
+
+{% block javascriptcode %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
+  <script type="text/javascript" src="https://rawgit.com/domitry/elegans/master/release/elegans.min.js"></script>
+  <script type="text/javascript" src="https://rawgit.com/mrdoob/three.js/r49/examples/js/ImprovedNoise.js"></script>
+<script>
+    first_creation=true
+    $(document).ready(function() {
+        
+        if($(window).width() < 570) {
+            $("#pc_ri").css('width','80%')
+            $("#pm_ri").css('width','80%')
+        }else if ($(window).width() < 1150) {
+            $("#pc_ri").css('width','40%')
+            $("#pm_ri").css('width','40%')
+        }
+        
+        $("#delete_data").click(function(){
+            $("#lim_superior").val("");
+            $("#lim_inferior").val("");
+            $("#k").val("");
+            $("#N_variables").val("");
+        });
+     
+        $("#generate_dataset").click(function(){
+            N_variables=$("#N_variables").val()
+            k=$("#k").val()
+            lim_inferior=$("#lim_inferior").val()
+            lim_superior=$("#lim_superior").val()
+
+         
+            if(N_variables <= 0){
+                swal({
+                    icon: 'error',
+                    title: 'Sin cantidad de variables',
+                    text: 'Favor de ingresar un número entero positivo',
+                    buttons: 'Aceptar',
+                });
+            }else if(k <= 0){
+                swal({
+                    icon: 'error',
+                    title: 'Sin cantidad de filas para el dataset',
+                    text: 'Favor de ingresar un número entero positivo',
+                    buttons: 'Aceptar',
+                });
+            }else if(lim_inferior >= lim_superior){
+                swal({
+                    icon: 'error',
+                    title: 'Límites incorrectos',
+                    text: 'El límite inferior debe ser menor que el límite superior',
+                    buttons: 'Aceptar',
+                });
+            }else{
+                var ajax_operation_timer = setTimeout(function() {
+                    $("#loading_serie").show();
+                }, 800);
+                
+                $.ajax({
+                    url: '{{ url_for("generar_matriz") }}',
+                    method: 'post',
+                    data: JSON.stringify({
+                        N_variables: N_variables,
+                        k: k,
+                        lim_inferior: lim_inferior,
+                        lim_superior: lim_superior
+                    }, null, '\t'),
+
+                    contentType: 'application/json;charset=UTF-8',
+
+                    success: function(result) {
+                        clearTimeout(ajax_operation_timer);
+
+                        $('#loading_serie').hide();
+                        
+                        determinante = result[2];
+
+                        $('#numero_variables').html(N_variables);
+                        
+                        array_medias = result[4];
+                        array_desviacion = result[3];
+                        desviacion_string = "<strong>[</strong>";
+                        medias_string="<strong>[</strong>";
+
+                        for(var j=0;j<array_desviacion.length;j++){
+                            if(j!=array_desviacion.length-1){
+                                desviacion_string+=array_desviacion[j]+"&nbsp;<strong>,</strong>&nbsp;";
+                                medias_string+=array_medias[j]+"&nbsp;<strong>,</strong>&nbsp;";
+                            }else{
+                                desviacion_string+=array_desviacion[j];
+                                medias_string+=array_medias[j];
+                            }
+                        }
+                        desviacion_string+="<strong>]</strong>";
+                        medias_string+="<strong>]</strong>";
+
+                        $('#vector_medias').html(medias_string);
+                        $('#vector_desviacion_estandar').html(desviacion_string);
+
+                        matriz_covarianza = result[1]
+                        matriz_dataset = result[0];
+                        matriz_dataset_rechazados = result[7];
+                        columna1 = [];
+                        columna2 = [];
+                        columna1_rechazados = [];
+                        columna2_rechazados = [];
+                        vector_fx = result[5];
+                        vector_z = result[6];
+                        rechazados = result[8];
+
+                        for(var i=1;i<=k;i++){
+                            columna1.push(matriz_dataset[i-1][0]);
+                            columna2.push(matriz_dataset[i-1][1]);
+                            columna1_rechazados.push(matriz_dataset_rechazados[i-1][0]);
+                            columna2_rechazados.push(matriz_dataset_rechazados[i-1][1]);
+                        } 
+
+                        if(matriz_dataset == "Error"){
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Se obtuvo una determinante negativa con la matriz de covarianza generada. Favor de volver a generar el dataset',
+                                buttons: 'Aceptar',
+                            });
+                        }
+
+                        txt = "";
+                        $("#dataset_datatable").html("");
+                        txt += "<thead>";
+                        txt += "<tr>";
+                        txt += "<th>k</th>";
+                        for(var i=1;i<=N_variables;i++){
+                            txt += "<th>x"+i+"</th>";
+                        }
+                        txt += "</tr>";
+                        txt += "</thead>";
+
+                        for(var i=1;i<=k;i++){
+                            txt += "<tr>";
+                            txt += "<td>"+i+"</td>";
+                            for(var j=1;j<=N_variables;j++){
+                                txt += "<td>"+matriz_dataset[i-1][j-1]+"</td>";
+                            }
+                            txt += "</tr>";
+                        }   
+                        $("#dataset_datatable").html(txt);
+                        
+                        txt_covarianza = "";
+                        $("#covarianza_datatable").html("");
+                        txt_covarianza += "<thead>";
+                        txt_covarianza += "<tr>";
+                        txt_covarianza += "<th></th>";
+                        for(var i=1;i<=N_variables;i++){
+                            txt_covarianza += "<th>x"+i+"</th>";
+                        }
+                        txt_covarianza += "</tr>";
+                        txt_covarianza += "</thead>";
+
+                        for(var i=1;i<=N_variables;i++){
+                            txt_covarianza += "<tr>";
+                                txt_covarianza += "<th>x"+i+"</th>";
+                            for(var j=1;j<=N_variables;j++){
+                                txt_covarianza += "<td>"+matriz_covarianza[i-1][j-1]+"</td>";
+                            }
+                            txt_covarianza += "</tr>";
+                        }   
+                        $("#covarianza_datatable").html(txt_covarianza);
+
+                        if(first_creation){
+                            first_creation=false
+                        }else{
+                            dataset_datatable.destroy();
+                            covarianza_datatable.destroy();
+                        }
+                        
+                        dataset_datatable=$('#dataset_datatable').DataTable({
+                            responsive: true,
+                            pageLength: 40,
+                            dom: 'frtip'
+                        });
+                       
+                        covarianza_datatable=$('#covarianza_datatable').DataTable({
+                            responsive: true,
+                            pageLength: 40,
+                            dom: 'frtip'
+                        });
+
+                        var gd = document.getElementById('grafica_datos');
+                        var resizeDebounce = null;
+
+                        function resizePlot() {
+                            var bb = gd.getBoundingClientRect();
+
+                            Plotly.relayout(gd, {
+                                width: bb.width,
+                                height: bb.height
+                            });
+                            
+                           
+                        }
+
+                        
+                        window.addEventListener('resize', function() {
+                            if (resizeDebounce) {
+                                window.clearTimeout(resizeDebounce);
+                            }
+                            resizeDebounce = window.setTimeout(resizePlot, 100);
+                        });
+                        
+                        
+                        
+                        Plotly.newPlot(gd, {
+                            data: [{"meta": {"columnNames": {"x": "x", "y": "y", "z": "fx"}}, 
+                            
+                            "mode": "markers","name": "Datos excluidos", "type": "scatter3d", "xsrc": "1530220:0:0815f2",
+                            "x": columna1_rechazados, "ysrc": "1530220:0:d1b2cf", 
+                            "y": columna2_rechazados, "zsrc": "1530220:0:3bf141", 
+                            "z": rechazados, "marker": {"color": "rgb(221, 42, 11)","size": 3}, "opacity": 0.6},
+                            
+                            {"meta": {"columnNames": {"x": "x", "y": "y", "z": "fx"}}, 
+                            "mode": "markers", "name": "Datos aceptados","type": "scatter3d", "xsrc": "1530220:0:0815f2",
+                            "x": columna1, "ysrc": "1530220:0:d1b2cf", 
+                            "y": columna2, "zsrc": "1530220:0:3bf141", 
+                            "z": vector_z, "marker": {"color": "rgb(61, 182, 48)","size": 4}, "opacity": 0.8}, 
+                            
+                            {"meta": {"columnNames": {"x": "x", "y": "y", "z": "fx"}}, 
+                            "mode": "lines", "type": "mesh3d", "xsrc": "1530220:0:0815f2", "opacity": 0.5,
+                            "x": columna1, "ysrc": "1530220:0:d1b2cf", 
+                            "y": columna2, "zsrc": "1530220:0:3bf141", 
+                            "z": vector_fx,"color": "rgba(26,8,115,0.6)"}],
+
+                            layout: {"scene": {"xaxis": {"type": "linear", 
+                            "range": "auto", "nticks": 4}, 
+                            "yaxis": {"type": "linear", "range": "auto", "nticks": 4}, 
+                            "zaxis": {"type": "linear", "range": "auto", "nticks": 4}, 
+                            "camera": {"up": {"x": 0, "y": 0, "z": 1}, 
+ 
+                            "projection": {"type": "perspective"}}, "aspectmode": "auto"}, 
+                            
+                            "autosize": true},
+                            frames: [],
+                            //config: {"showLink": true, "linkText": "", "mapboxAccessToken": "pk.eyJ1IjoiY2hyaWRkeXAiLCJhIjoiY2lxMnVvdm5iMDA4dnhsbTQ5aHJzcGs0MyJ9.X9o_rzNLNesDxdra4neC_A"}
+                        });
+
+                      
+                    }
+                });
+
+
+
+
+            }
+            
+        });
+       
+    });
+</script>
+{% endblock %}

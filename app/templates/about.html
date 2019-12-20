@@ -1,0 +1,117 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}Acerca De{% endblock %}
+
+{% block body %}
+<div class="page-header card">
+<div class="row align-items-end">
+    <div class="col-lg-8">
+        <div class="page-header-title">
+            <i class="fas fa-info-circle" style="min-width:50px; background-color:#DA4524"></i>
+            <div class="d-inline">
+                <h4 style="text-transform: none;">Acerca de</h4>
+                <span style="text-transform: none;">Información del proyecto.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}">
+                        <i class="icofont icofont-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Acerca de</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<div class="page-body">
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Zero config.table start -->
+        <div class="card">
+            <div class="card-block">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <h3 style="color:#DA4524; font-weight:bold">Proyecto</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5>Materia:</h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <h4>Introducción a la Ingeniería y Tecnologías Computacionales</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5>Catedrático:</h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <h3><strong>Dr. Edwyn Javier Aldana Bobadilla</strong></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5>Desarrolladores:</h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <h4>Erick Elizondo Rodríguez</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <h4>Miguel Angel Pérez Sánchez </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <center>
+                    <a style="color:white;" onClick='history.go(-1)'' class="btn btn-primary btn-adjust-mobile"><i class="icofont icofont-arrow-left"></i>Regresar</a>
+                </center>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block javascriptcode %}
+<script>
+    /*
+    $("#test").click(function(){
+        $.ajax({
+			url: '',
+			method: 'post',
+            data: {
+				name: "hola"
+			},
+			success: function(result) {
+                console.log(result);
+				console.log(result['response']);
+			}
+		});
+    });*/
+
+</script>
+{% endblock %}

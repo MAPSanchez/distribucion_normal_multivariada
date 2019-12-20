@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery/js/jquery.min.js') }}"></script>
+<head>
+    <script>
+    	if(performance.navigation.type == 2){
+    	   location.reload(true);
+    	}
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block header %}
+    <title>{% block title %}{% endblock %} - Cinvestav</title>
+    {% endblock %}
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+
+    <!-- Styles -->
+    <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{ url_for('static', filename='assets/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.ico') }}" type="image/x-icon">
+    <!-- Google font-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
+    <!-- Required Fremwork -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap/css/bootstrap.min.css') }}">
+    <!-- themify-icons line icon -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/icon/themify-icons/themify-icons.css') }}">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/icon/icofont/css/icofont.css') }}">
+    <!-- Menu-Search css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/pages/menu-search/css/component.css') }}">
+    <!-- Select 2 css -->
+    <link rel="stylesheet" href="{{url_for('static', filename='bower_components/select2/css/select2.min.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/pages/j-pro/css/j-forms.css')}}">
+    <!--forms-wizard css-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/jquery.steps/css/jquery.steps.css')}}">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/pages/data-table/css/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/jquery.mCustomScrollbar.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- notifications -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bower_components/animate.css/css/animate.css')}}">
+    <!-- Chartlist chart css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/chartist/css/chartist.css') }}" type="text/css" media="all">
+    <!--Sweetalert css-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/sweetalert.min.css') }}" />
+    <!-- C3 chart -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/c3/css/c3.css') }}" type="text/css" media="all">
+    <!--file_upload_input css-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/file_upload_input.css') }}" />
+    <!-- Date-time picker css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/pages/advance-elements/css/bootstrap-datetimepicker.css') }}">
+    <!-- Date-range picker css  -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap-daterangepicker/css/daterangepicker.css') }}" />
+    <!-- Date-Dropper css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/datedropper/css/datedropper.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/chartist/css/chartist.css')}}" type="text/css" media="all">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/seiyria-bootstrap-slider/css/bootstrap-slider.css')}}">
+    </head>
+<body>
+    <div class="theme-loader">
+        <div class="ball-scale">
+            <div class='contain'>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a style="padding:7px; padding-left: 10px; padding-right: 10px" class="mobile-menu" id="mobile-collapse" href="#!">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <a class="mobile-search morphsearch-search" href="#">
+                            <i class="ti-search"></i>
+                        </a>
+                        <a href="{{ url_for('index') }}">
+                            <img class="img-fluid" src="{{ url_for('static', filename='assets/images/logo_cinvestav.png') }}" style="width:160px;" alt="CINVESTAV" />
+                        </a>
+                        <a class="mobile-options">
+                            <i class="ti-more"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li>
+                                <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                            </li>
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen();">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <nav class="pcoded-navbar">
+                        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                        <div class="pcoded-inner-navbar main-menu">
+
+                            <div id="main_navbar" class="pcoded-navigatio-lavel" data-i18n="nav.category.app" style="width:50px;">Navegación</div>
+                            {% include 'layouts/sidebar.html' %}
+                            </nav>
+
+                            <div class="pcoded-content">
+                                <div class="pcoded-inner-content">
+                                    <div class="main-body">
+                                        <div class="page-wrapper">
+                                            {% block body %}{% endblock %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery-ui/js/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/popper.js/js/popper.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery-slimscroll/js/jquery.slimscroll.js') }}"></script>
+
+    <!-- modernizr js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/modernizr/js/modernizr.js') }}"></script>
+
+    <!-- am chart -->
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/widget/amchart/amcharts.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/widget/amchart/serial.min.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/graficar3d.min.js') }}"></script>
+
+
+    <!-- i18next.min.js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next/js/i18next.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery-i18next/js/jquery-i18next.min.js') }}"></script>
+
+    <!-- Custom js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/advance-elements/custom-picker.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/pcoded.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/script.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/extension-btns-custom.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/script.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/demo-upv-1.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/pages/forms-wizard-validation/form-wizard.js') }}"></script>
+
+    <!--Forms - Wizard js-->
+    <script src="{{ url_for('static', filename='bower_components/jquery.cookie/js/jquery.cookie.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/jquery.steps/js/jquery.steps.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/jquery-validation/js/jquery.validate.js') }}"></script>
+
+    <!-- Datatable -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/buttons.flash.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/extensions/buttons/js/buttons.colVis.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/data-table/js/data-table-custom.js') }}"></script>
+
+    <!-- Select 2 js -->
+    <script type="text/javascript" src="{{url_for('static', filename='bower_components/select2/js/select2.full.min.js')}}"></script>
+
+    <!-- Bootstrap date-time-picker js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/advance-elements/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/pages/advance-elements/bootstrap-datetimepicker.min.js') }}"></script>
+    <!-- Date-range picker js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/bootstrap-daterangepicker/js/daterangepicker.js') }}"></script>
+    <!-- Date-dropper js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/datedropper/js/datedropper.min.js') }}"></script>
+    <!-- Color picker js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/spectrum/js/spectrum.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jscolor/js/jscolor.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js') }}"></script>
+    <!-- notification js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-growl.min.js') }}"></script>
+
+    <!-- Modal -->
+	<div id="loading_modal_pdf" class="modal-loading-pdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div style="padding-top:9%" class="loader-block">
+			 <svg id="loader2" viewBox="0 0 100 100">
+			 <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+			 </svg>
+	 	</div>
+		<center>
+			<h4 id="myModalLabel_pdf" style="color:white;">Generando el archivo .pdf </h4>
+			<h5 style="color:white;">Por favor espere...</h5>
+		</center>
+	</div>
+
+
+    <script>
+        var base_img_url = '';
+        var can_continue = true;
+        var modifications_done = false;
+
+        $('#downloadLink').click(function() {
+		  $('#fader').css('display', 'block');
+		});
+
+
+
+        $(document).ready(function(){
+            
+            if ($(window).width() > 991) {
+                $('#mobile-collapse').trigger('click');
+            }
+            $(".select2_basic").select2();
+            $(".select2_datatable").select2();
+
+			$('#table_footer').appendTo('#table_header');
+
+            if($('#form')!=null){
+                $("#form").submit(function(e) {
+                    can_continue=true;
+                    for(i=0;i<error_divs.length;i++){
+                        if(error_divs[i].css('display')=='block'){
+                            can_continue=false;
+                            break;
+                        }
+                    }
+
+                    if(!can_continue){
+                        e.preventDefault();
+                        swal({
+                            icon: 'error',
+                            title: 'No se pudo guardar el registro',
+                            text: 'Por favor corrija los errores antes de continuar.',
+                            buttons: 'Aceptar',
+                        })
+                    }
+                });
+            }
+  		})
+
+        var modal = document.getElementById('modal_show_img');
+        var is_open = false;
+        var img = document.getElementById('modal_img');
+        var modalImg = document.getElementById("img_content");
+        var captionText = document.getElementById("caption");
+
+        if (img!=null) {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+                is_open = true;
+            }
+            modalImg.onclick = function() {
+                modal.style.display = "none";
+                is_open = false;
+            }
+            modal.onclick = function() {
+                modal.style.display = "none";
+                is_open = false;
+            }
+            $(document).keyup(function(e) {
+                if (e.key === "Escape") {
+                    if (is_open) {
+                        modal.style.display = "none";
+                        is_open = false;
+                    }
+                }
+            });
+            var span = document.getElementsByClassName("close")[0];
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    {% block javascriptcode %}{% endblock %}
+</body>
+
+</html>

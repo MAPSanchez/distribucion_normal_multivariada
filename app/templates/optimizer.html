@@ -1,0 +1,551 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}Optimizador de Funciones{% endblock %}
+
+{% block body %}
+
+<div class="page-header card">
+<div class="row align-items-end">
+    <div class="col-lg-8">
+        <div class="page-header-title">
+            <i class="fas fa-calculator" style="min-width:50px; background-color:#259182"></i>
+            <div class="d-inline">
+                <h4 style="text-transform: none;">Optimizador de Funciones</h4>
+                <span style="text-transform: none;">Seleccione alguna funcion y una heuristica para obtener sus valores optimos.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="page-header-breadcrumb">
+            <ul class="breadcrumb-title">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('index') }}">
+                        <i class="icofont icofont-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item">Optimizador de Funciones</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="page-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Zero config.table start -->
+            <div class="card">
+                <div id="selecting_div" class="card-block">
+                    <h4 class="sub-title">Seleccione la Heuristica que desee utilizar</h4>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Heuristica:</label>
+                        <div class="col-sm-10">
+                            <select id="heuristics" name="heuristics" class="select2_basic" title="Heuristica que sera utilizara para resolver la funcion que se seleccione">
+                                {%for i in range(0, heuristics_length)%}
+                                    <option value="{{heuristics[i]['id']}}">{{heuristics[i]['name']}}</option>
+                                {%endfor%}
+                            </select>
+						</div>
+                    </div>
+                    <div class="form-grup row">
+                        <label class="col-sm-2 col-form-label">Iteraciones:</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="iterations_number" class="form-control" title="Numero de Iteraciones" step="1" min="1" value="500" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                        </div>
+
+                            <label id="elements_label" class="col-sm-2 col-form-label">Individuos:</label>
+                            <div class="col-sm-4">
+                                <input type="number" id="elements_number" class="form-control" title="Numero de Individuos" step="1" min="2" value="100" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                            </div>
+
+                    </div>
+                    <div id="heuristic_div2">
+                        <div style="margin-top:9px" class="form-group row">
+                            <label class="col-sm-2 col-form-label">Probabilidad de Cruza:</label>
+                            <div class="col-sm-3 my-auto">
+                                <div >
+                                    0.0&nbsp&nbsp&nbsp<input id="pc_ri" style="width:65%" type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="0.8" data-value="0.8" value="0.8" > &nbsp&nbsp1.0
+                                </div>
+                            </div>
+                            <div style="padding-left:0px" class="col-sm-1 my-auto">
+                                Pc = <span style="font-weight:bold" id="pc_ri_val">0.8</span>
+                            </div>
+                            <label class="col-sm-2 col-form-label" >Probabilidad de Mutación:</label>
+                            <div class="col-sm-3 my-auto">
+                                <div>
+                                    0.0&nbsp&nbsp&nbsp<input id="pm_ri" style="width:65%" type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="0.1" data-value="0.1" value="0.1" > &nbsp&nbsp1.0
+                                </div>
+                            </div>
+                            <div style="padding-left:0px" class="col-sm-1 my-auto">
+                                Pm = <span style="font-weight:bold" id="pm_ri_val">0.1</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <h4 class="sub-title">Seleccione la Funcion que desee evaluar</h4>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Función:</label>
+                        <div class="col-sm-10">
+                            <select id="functions" name="functions" class="select2_basic" title="Función que sera evaluada con la heuristica previamente seleccionada">
+                                {%for i in range(0, functions_length)%}
+                                    <option value="{{functions[i]['id']}}">{{functions[i]['name']}}</option>
+                                {%endfor%}
+                                <option value="0">Otra Función</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="details_function_div" class="form-group row">
+                        <div class="col-sm-4">
+                            <img style="width:100%" id="function_graph_img" src="{{ url_for('static', filename='functions_images/no-image.png') }}" alt="function graph" />
+                        </div>
+                        <div class="col-sm-8">
+                            <h4 class="sub-title">Detalles de la función seleccionada</h4>
+                            <div class="row">
+                                <label class="col-sm-2 my-auto col-form-label">Expresión:</label>
+                                <div class="col-sm-10 my-auto">
+                                    <img style="max-height: 70px; max-width:90%" id="function_expression_img" src="{{ url_for('static', filename='') }}" alt="function" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <label class="col-sm-2 my-auto col-form-label">Minimo X<sub>i</sub>:</label>
+                                <div class="col-sm-2 my-auto">
+                                    <span id="min_x_value_span" style="font-weight:bold"></span>
+                                </div>
+                                <label class="col-sm-2 my-auto col-form-label">Maximo X<sub>i</sub>:</label>
+                                <div class="col-sm-2 my-auto">
+                                    <span id="max_x_value_span" style="font-weight:bold"></span>
+                                </div>
+
+                                <label id="max_n_label" class="col-sm-2 my-auto col-form-label">Maximo n:</label>
+                                <div id="max_n_value_div" class="col-sm-2 my-auto">
+                                    <span id="max_n_value_span" style="font-weight:bold"></span>
+                                </div>
+                            </div>
+                            <br />
+                            <h4 class="sub-title">Opciones para la evaluación de función</h4>
+                            <div class="row">
+                                <label class="col-sm-2 my-auto col-form-label">Evaluar con minimo X<sub>i</sub>:</label>
+                                <div class="col-sm-4 my-auto">
+                                    <input type="number" id="min_value_x_fun" class="form-control" title="Valor minimo de X" step="0.1" value="0">
+                                </div>
+                                <label class="col-sm-2 my-auto col-form-label">Evaluar con maximo X<sub>i</sub>:</label>
+                                <div class="col-sm-4 my-auto">
+                                    <input type="number" id="max_value_x_fun" class="form-control" title="Valor maximo de X" step="0.1" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 my-auto col-form-label">Valor de n:</label>
+                                <div class="col-sm-4 my-auto">
+                                    <input type="number" id="max_value_n_fun" class="form-control" title="Valor de n" step="1" min="1" value="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 my-auto col-form-label">Buscar valor:</label>
+                                <div class="col-sm-4 my-auto">
+                                    <div style="margin-top:10px" class="form-radio">
+                                        <div class="radio radiofill radio-success radio-inline">
+                                            <label>
+                                                <input id="max_rb" type="radio" name="radio" checked="checked">
+                                                <i class="helper"></i>Maximo
+                                            </label>
+                                        </div>
+                                        <div class="radio radiofill radio-warning radio-inline">
+                                            <label>
+                                                <input id="min_rb" type="radio" name="radio">
+                                                <i class="helper"></i>Minimo
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 my-auto col-form-label">Precision decimal:</label>
+                                <div class="col-sm-4 my-auto">
+                                    <input type="number" id="decimal_precission" class="form-control" title="Precisión decimal requerida" step="1" min="2" value="8" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+
+                                </div>
+                            </div>
+
+                            <br />
+                            <button type="button" style="width:100%;" id="calculate_btn" class="btn btn-success"><i class="fas fa-check"></i>Evaluar Función</button>
+
+                        </div>
+                    </div>
+                    <div id="user_function_div">
+                        <div class="form-group row">
+                            <label class="col-sm-2 my-auto col-form-label">Ingrese la Expresión:</label>
+                            <div class="col-sm-10 my-auto">
+                                <input id="user_function_expression" class="form-control" type="text" />
+                            </div>
+                        </div>
+                        <button type="button" style="width:100%;" id="calculate_user_function_btn" class="btn btn-success"><i class="fas fa-check"></i>Evaluar Función</button>
+                    </div>
+
+                </div>
+                <div id="results_div" class="card-block">
+                    <h4 class="sub-title">Detalles de evaluacion</h4>
+
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Función Evaluada:</label>
+                        <div class="col-sm-4 my-auto">
+                            <span style="font-weight:bold; color:#4680ff; font-size:16px" id="r_function_name">De Jong's function</span>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Heuristica Utilizada:</label>
+                        <div class="col-sm-4 my-auto">
+                            <span style="font-weight:bold; color:#4680ff; font-size:16px" id="r_heuristic_name">RMHC</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 my-auto col-form-label">Expresion evaluada:</label>
+                        <div class="col-sm-10 my-auto">
+                            <img style="max-height: 65px; max-width:90%" id="r_function_expression_img" src="{{ url_for('static', filename='functions_images/axis_parallell_expression.png') }}" alt="function" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="ega_show_div" class="form-group row">
+                        <label class="col-sm-2 my-auto col-form-label">Iteraciones:</label>
+                        <div class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_iterations">200</span>
+                        </div>
+                        <label id="r_elements_label" class="col-sm-2 my-auto col-form-label">Individuos:</label>
+                        <div id="r_elements_div" class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_elements">200</span>
+                        </div>
+                        <label id="r_pc_label" class="col-sm-2 my-auto col-form-label">Probabilidad de Cruza:</label>
+                        <div id="r_pc_div" class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_pc">15</span>%
+                        </div>
+                        <label id="r_pm_label" class="col-sm-2 my-auto col-form-label">Probabilidad de Mutación:</label>
+                        <div id="r_pm_div" class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_pm">15</span>%
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label id="r_iterations_rmhc_label" class="col-sm-2 my-auto col-form-label">Iteraciones:</label>
+                        <div id="r_iterations_rmhc_div" class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_iterations_rmhc">200</span>
+                        </div>
+                        <label class="col-sm-2 my-auto col-form-label">Minimo X<sub>i</sub>:</label>
+                        <div class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_min_x">-5.12</span>
+                        </div>
+                        <label class="col-sm-2 my-auto col-form-label">Maximo X<sub>i</sub>:</label>
+                        <div class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_max_x">5.12</span>
+                        </div>
+                        <label id="r_max_n_label" class="col-sm-2 my-auto col-form-label">n:</label>
+                        <div id="r_max_n_div" class="col-sm-1 my-auto">
+                            <span style="font-weight:bold" id="r_max_n">2</span>
+                        </div>
+                    </div>
+                    <br />
+                    <h4 class="sub-title">Resultados Obtenidos</h4>
+                    <div class="row">
+                        <label class="col-sm-2 my-auto col-form-label">Mejor Fitness:</label>
+                        <div class="col-sm-10 my-auto">
+                            <span style="font-weight:bold; color:#4680ff; font-size: 16px" id="r_fitness">0.0000</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 my-auto col-form-label">Mejores valores en:</label>
+                        <div class="col-sm-10 my-auto">
+                            <span style="font-weight:bold" id="r_values">x<sub>1</sub>=10, x<sub>2</sub>=20 </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 my-auto col-form-label">Cadenas Binarias:</label>
+                        <div class="col-sm-10 my-auto">
+                            <span style="font-weight:bold" id="r_binary_string">[0,0,0,0,0,1],[0,0,0,0,0,0,0] </span>
+                        </div>
+                    </div>
+                    <hr />
+                    <center>
+                        <a style="color:white;" onClick='history.go(-1)'' class="btn btn-primary btn-adjust-mobile"><i class="icofont icofont-arrow-left"></i>Regresar</a>
+                        <a id="new_function_btn" style="color:white;" class="btn btn-warning btn-adjust-mobile"><i class="fas fa-redo"></i>Evaluar Nueva Función</a>
+
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loading_serie" class="modal-loading-pdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div style="padding-top:9%" class="loader-block">
+         <svg id="loader2" viewBox="0 0 100 100">
+         <circle id="circle-loader2" cx="50" cy="50" r="45"></circle>
+         </svg>
+    </div>
+    <center>
+        <h4 id="myModalLabel_pdfupdateHeuristicsDiv" style="color:white;">Evaluando la función ingresada </h4>
+        <h5 style="color:white;">Por favor espere...</h5>
+    </center>
+</div>
+
+{% endblock %}
+
+{% block javascriptcode %}
+<script>
+    $("#results_div").hide();
+    var current_function=0
+    var base_url="{{ url_for('static', filename='') }}"
+
+    var search_type="min"
+
+    var max_n=0
+    var max_x=0
+    var min_x=0
+
+    var sel_n=0
+    var sel_max_x=0
+    var sel_min_x=0
+
+    $("#max_rb").click(function(){
+        search_type="max"
+    });
+
+    $("#min_rb").click(function(){
+        search_type="min"
+    });
+
+    $(document).ready(function() {
+        if($(window).width() < 570) {
+            $("#pc_ri").css('width','80%')
+            $("#pm_ri").css('width','80%')
+        }else if ($(window).width() < 1150) {
+            $("#pc_ri").css('width','40%')
+            $("#pm_ri").css('width','40%')
+		}
+
+        $("#new_function_btn").click(function(){
+            $("#selecting_div").show(200);
+            $("#results_div").hide();
+        });
+
+        $("#calculate_btn").click(function(){
+            var ajax_operation_timer = setTimeout(function() {
+                $("#loading_serie").show();
+            }, 800);
+
+            sel_n=$("#max_value_n_fun").val()
+            sel_max_x=$("#max_value_x_fun").val()
+            //sel_min_x=$("#min_value_x_fun").val()
+            //console.log("sel"+sel_min_x)
+            //sel_min_x=4
+            elements_number=$("#elements_number").val()
+            pc=parseFloat($("#pc_ri_val").text())
+            pm=parseFloat($("#pm_ri_val").text())
+
+            iterations=$("#iterations_number").val()
+
+            $("#r_max_n").text(sel_n)
+            $("#r_max_x").text(sel_max_x)
+            $("#r_min_x").text(sel_min_x)
+            $("#r_elements").text(elements_number)
+            $("#r_pc").text(pc*100)
+            $("#r_pm").text(pm*100)
+
+            if($("#heuristics").val()==1){
+                $("#r_iterations_rmhc").text(iterations)
+            }else{
+                $("#r_iterations").text(iterations)
+            }
+
+            $.ajax({
+                url: '{{ url_for("evaluate_function") }}',
+                method: 'post',
+                data: JSON.stringify({
+                    heuristic_type: $("#heuristics").val(),
+                    function_type: $("#functions").val(),
+                    n: sel_n,
+                    max_x: sel_max_x,
+                    min_x: sel_min_x,
+                    elements_number: elements_number,
+                    pc: pc,
+                    pm: pm,
+                    iterations: iterations,
+                    search_type: search_type,
+                    decimal_precission: $("#decimal_precission").val()
+                }, null, '\t'),
+                contentType: 'application/json;charset=UTF-8',
+
+                success: function(result) {
+                    clearTimeout(ajax_operation_timer);
+                    $('#loading_serie').hide();
+                    $("#selecting_div").hide();
+                    $("#results_div").show(200);
+
+                    $("#r_fitness").text(result[2])
+                    final_binary_string="["
+
+                    for(var i=0;i<result[0].length;i++){
+                        final_binary_string+="["
+                        for(var j=0;j<result[0][i].length;j++){
+                            if(j!=result[0][i].length-1){
+                                final_binary_string+=result[0][i][j]+",";
+                            }else{
+                                final_binary_string+=result[0][i][j];
+                            }
+
+                        }
+                        if(i!=result[0].length-1){
+                            final_binary_string+="],"
+                        }else{
+                            final_binary_string+="]"
+                        }
+
+                    }
+                    final_binary_string+="]"
+                    $("#r_binary_string").text(final_binary_string)
+
+                    var final_str=""
+                    for(var i=0;i<result[1].length;i++){
+                        if(i!=result[1].length-1){
+                            final_str+="X<sub>"+(i+1)+"</sub> = <span style='font-size:17px'>"+result[1][i]+"</span>, ";
+                        }else{
+                            final_str+="X<sub>"+(i+1)+"</sub> = <span style='font-size:17px'>"+result[1][i]+"</span>";
+                        }
+
+                    }
+
+                    $("#r_values").html(final_str)
+                }
+            });
+        });
+
+        updateHeuristicsDiv()
+        updateFunctionsDiv()
+
+        $("#r_heuristic_name").text($("#heuristics option:selected").text());
+        $("#r_function_name").text($("#functions option:selected").text());
+
+        $("#heuristics").change(function(){
+            updateHeuristicsDiv()
+            $("#r_heuristic_name").text($("#heuristics option:selected").text());
+        });
+
+        $("#functions").change(function(){
+            updateFunctionsDiv()
+            $("#r_function_name").text($("#functions option:selected").text());
+        });
+
+        $("#max_value_n_fun").on("input", function(e) {
+            if($("#max_value_n_fun").val()>max_n && max_n!=0){
+                $("#max_value_n_fun").val(max_n)
+                sel_n=$("#max_value_n_fun").val()
+            }else if($("#max_value_n_fun").val()<1){
+                $("#max_value_n_fun").val(1)
+                sel_n=$("#max_value_n_fun").val()
+            }
+        });
+
+        $("#min_value_x_fun").on("input", function(e) {
+            if($("#min_value_x_fun").val()<min_x){
+                $("#min_value_x_fun").val(min_x)
+                sel_min_x=$("#min_value_x_fun").val()
+            }else if($("#min_value_x_fun").val()>sel_max_x-0.1){
+                $("#min_value_x_fun").val(sel_max_x-0.1)
+                sel_min_x=sel_max_x-0.1
+            }else{
+                sel_min_x=$("#min_value_x_fun").val()
+            }
+        });
+
+        $("#max_value_x_fun").on("input", function(e) {
+            if($("#max_value_x_fun").val()>max_x){
+                $("#max_value_x_fun").val(max_x)
+                sel_max_x=$("#max_value_x_fun").val()
+            }else if($("#max_value_x_fun").val()<parseFloat(sel_min_x+0.2)){
+                console.log($("#max_value_x_fun").val())
+                $("#max_value_x_fun").val(parseFloat(sel_min_x+0.1))
+                sel_max_x=parseFloat(sel_min_x+0.1)
+            }else{
+                sel_max_x=$("#max_value_x_fun").val()
+            }
+        });
+
+        function updateHeuristicsDiv(){
+            if($("#heuristics").val()==1){
+                $("#elements_label").hide()
+                $("#elements_number").hide()
+                $("#heuristic_div2").hide()
+
+                $("#ega_show_div").hide()
+                $("#r_iterations_rmhc_div").show(200)
+                $("#r_iterations_rmhc_label").show(200)
+
+                $("#iterations_number").val(20000)
+            }else{
+                $("#elements_label").show(200)
+                $("#elements_number").show(200)
+                $("#heuristic_div2").show(200)
+
+                $("#ega_show_div").show(200)
+                $("#r_iterations_rmhc_div").hide()
+                $("#r_iterations_rmhc_label").hide()
+
+                $("#iterations_number").val(300)
+            }
+        }
+
+        function updateFunctionsDiv(){
+            if($("#functions").val()==0){
+                $("#details_function_div").hide()
+                $("#user_function_div").show(100)
+            }else{
+                $.ajax({
+        			url: '{{ url_for("get_function_details") }}',
+        			method: 'post',
+                    data: JSON.stringify({id: $("#functions").val()}, null, '\t'),
+                    contentType: 'application/json;charset=UTF-8',
+
+        			success: function(result) {
+                        fun=result['function_details'][0]
+                        $("#function_graph_img").attr('src',base_url+fun['graph_image_url'])
+                        $("#function_expression_img").attr('src',base_url+fun['expression_image_url'])
+                        $("#r_function_expression_img").attr('src',base_url+fun['expression_image_url'])
+
+                        max_n=fun['max_n']
+                        min_x=fun['inf_limit']
+                        max_x=fun['sup_limit']
+
+                        sel_max_x=max_x
+                        sel_min_x=min_x
+
+                        $("#max_value_x_fun").val(max_x)
+                        $("#min_value_x_fun").val(min_x)
+                        $("#max_value_n_fun").val(2)
+
+                        $("#min_x_value_span").text(min_x)
+                        $("#max_x_value_span").text(max_x)
+                        if(max_n==0){
+                            $("#max_n_value_div").hide()
+                            $("#max_n_label").hide()
+                        }else{
+                            $("#max_n_value_div").show(200)
+                            $("#max_n_label").show(200)
+                            $("#max_n_value_span").text(max_n)
+                            sel_n=max_n
+                        }
+        			}
+        		});
+
+                $("#details_function_div").show(100)
+                $("#user_function_div").hide()
+            }
+        }
+
+        $("#pc_ri").bootstrapSlider();
+        $("#pc_ri").on("slide", function(slideEvt) {
+            $("#pc_ri_val").text(slideEvt.value);
+        });
+
+        $("#pm_ri").bootstrapSlider();
+        $("#pm_ri").on("slide", function(slideEvt) {
+            $("#pm_ri_val").text(slideEvt.value);
+        });
+
+
+    });
+</script>
+{% endblock %}
